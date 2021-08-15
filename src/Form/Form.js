@@ -3,6 +3,7 @@ import shortid from 'shortid';
 import style from './Form.module.css';
 import { connect } from 'react-redux';
 import contactsAction from '../redux/contacts-action';
+import Contacts from '../Contacts/Contacts';
 
 function Form({ onSubmit }) {
   const [name, setName] = useState('');
@@ -30,10 +31,11 @@ function Form({ onSubmit }) {
 
   const handelSubmit = e => {
     e.preventDefault();
-
-    onSubmit(currentContact);
-
-    reset();
+    if (currentContact !== name) {
+      onSubmit(currentContact);
+      reset();
+    }
+    alert(`${name} is already in contacts`);
   };
 
   const reset = () => {
@@ -77,7 +79,7 @@ function Form({ onSubmit }) {
 }
 
 const mapDispatchToProps = dispatch => ({
-  onSubmit: number => dispatch(contactsAction.addContact(number)),
+  onSubmit: name => dispatch(contactsAction.addContact(name)),
 });
 
 export default connect(null, mapDispatchToProps)(Form);
