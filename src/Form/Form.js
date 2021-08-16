@@ -31,11 +31,12 @@ function Form({ onSubmit }) {
 
   const handelSubmit = e => {
     e.preventDefault();
-    if (currentContact !== name) {
-      onSubmit(currentContact);
-      reset();
+    if (currentContact === name) {
+      alert(`${name} is already in contacts`);
+      return;
     }
-    alert(`${name} is already in contacts`);
+    onSubmit(currentContact);
+    reset();
   };
 
   const reset = () => {
