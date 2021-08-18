@@ -3,13 +3,14 @@ import shortid from 'shortid';
 import style from './Form.module.css';
 import { connect } from 'react-redux';
 import contactsAction from '../redux/contacts-action';
-import Contacts from '../Contacts/Contacts';
+import { useSelector, useDispatch } from 'react-redux';
+import { getContacts } from '../redux/contacts-selection';
 
-function Form({ onSubmit }) {
+function Form() {
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
-
-  const id = shortid.generate();
+  const contacts = useSelector(getContacts);
+  const dispatch = useDispatch();
 
   const handleChange = e => {
     const { name, value } = e.target;
@@ -27,15 +28,15 @@ function Form({ onSubmit }) {
         return;
     }
   };
-  const currentContact = { name, number, id };
 
   const handelSubmit = e => {
     e.preventDefault();
-    if (currentContact === name) {
+    if (contacts.some(contact => contact.name === name)) {
       alert(`${name} is already in contacts`);
       return;
     }
-    onSubmit(currentContact);
+
+    dispatch(contactsAction.addContact({ name, number }));
     reset();
   };
 
@@ -80,7 +81,7 @@ function Form({ onSubmit }) {
 }
 
 const mapDispatchToProps = dispatch => ({
-  onSubmit: name => dispatch(contactsAction.addContact(name)),
+  onSubmit: (name, number) => dispatch(contactsAction.addContact(name, number)),
 });
 
 export default connect(null, mapDispatchToProps)(Form);
